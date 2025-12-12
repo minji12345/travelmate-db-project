@@ -10,7 +10,7 @@ def get_connection():
     return pymysql.connect(
         host='localhost',
         user='root',
-        password='alswl0211!', 
+        password='password', 
         db='travelmate',
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
