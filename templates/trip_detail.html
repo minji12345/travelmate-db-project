@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{ trip.title }}</h2>
+<p>기간: {{ trip.start_date }} ~ {{ trip.end_date }}</p>
+
+{% if trip.total_budget_krw %}
+  <p>예산: {{ trip.total_budget_krw }} 원</p>
+{% endif %}
+
+<hr>
+
+<!-- ====================== -->
+<!--      여행 인원 목록     -->
+<!-- ====================== -->
+
+<h3>여행 인원</h3>
+
+{% if participants %}
+  <ul style="list-style:none; padding-left:0; margin-bottom:10px;">
+    {% for p in participants %}
+    <li style="margin-bottom:6px;">
+      {{ p.name }}
+      <form method="POST"
+            action="{{ url_for('participant_delete',
+                               trip_id=trip.trip_id,
+                               user_id=p.user_id) }}"
+            style="display:inline-block; margin-left:8px;"
+            onsubmit="return confirm('이 인원과 관련된 지출/정산 기록도 함께 삭제됩니다.\n정말 삭제하시겠습니까?');">
+        <button type="submit"
+                style="
+                  font-size:11px;
+                  padding:2px 6px;
+                  border:1px solid #e57373;
+                  border-radius:4px;
+                  background:#ffebee;
+                  color:#c62828;
+                  cursor:pointer;
+                ">
+          삭제
+        </button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>등록된 인원이 없습니다.</p>
+{% endif %}
+
+<form method="POST"
+      action="{{ url_for('add_participant', trip_id=trip.trip_id) }}"
+      style="margin-top:5px;">
+  <label>이름 추가:</label>
+  <input type="text" name="name" required>
+  <button type="submit">추가</button>
+</form>
+
+<hr>
+
+<!-- ====================== -->
+<!--   여행 타임라인 보기   -->
+<!-- ====================== -->
+
+<h3>여행 타임라인</h3>
+
+<div class="timeline">
+  {% for d in destinations %}
+  <div class="timeline-item"
+       style="margin-bottom: 20px; padding: 10px; border-left: 4px solid #888; padding-left:10px;">
+
+    <div class="timeline-day"
+         style="font-weight:bold; font-size:18px; display:flex; align-items:center;">
+      <span>Day {{ d.day_no }}</span>
+
+      <!-- Day / 도시 수정 버튼 -->
+      <a href="{{ url_for('destination_edit', destination_id=d.destination_id) }}"
+         style="font-size:12px;
+                margin-left:10px;
+                padding:2px 6px;
+                border:1px solid #888;
+                border-radius:4px;
+                text-decoration:none;
+                color:#333;">
+        수정
+      </a>
+
+      <!-- Day / 도시 삭제 버튼 -->
+      <form method="POST"
+            action="{{ url_for('destination_delete', destination_id=d.destination_id) }}"
+            style="display:inline-block; margin-left:6px;"
+            onsubmit="return confirm('이 Day에 속한 액티비티도 함께 삭제됩니다.\n정말 삭제하시겠습니까?');">
+        <button type="submit"
+                style="font-size:12px;
+                       padding:2px 6px;
+                       border:1px solid #e57373;
+                       border-radius:4px;
+                       background:#ffebee;
+                       color:#c62828;
+                       cursor:pointer;">
+          삭제
+        </button>
+      </form>
+    </div>
+
+    <div class="timeline-content" style="margin-left: 0; margin-top:5px;">
+      <h4>{{ d.country_name }} {{ d.city_name }}</h4>
+
+      {% if d.note %}
+        <p style="color:#666;">{{ d.note }}</p>
+      {% endif %}
+
+      <h5>액티비티</h5>
+      <ul>
+        {% for a in activities if a.day_no == d.day_no %}
+          <li>
+            <strong>{{ a.name }}</strong>
+            {% if a.cost_krw %}
+              — {{ a.cost_krw }}원
+            {% endif %}
+
+            <!-- 액티비티 수정 버튼 -->
+            <a href="{{ url_for('activity_edit', activity_id=a.activity_id) }}"
+               style="font-size:11px; margin-left:6px; padding:1px 5px;
+                      border:1px solid #aaa; border-radius:4px;
+                      text-decoration:none; color:#333;">
+              수정
+            </a>
+
+            <!-- 액티비티 삭제 버튼 -->
+            <form method="POST"
+                  action="{{ url_for('activity_delete', activity_id=a.activity_id) }}"
+                  style="display:inline-block; margin-left:4px;"
+                  onsubmit="return confirm('이 액티비티를 삭제할까요?');">
+              <button type="submit"
+                      style="font-size:11px; padding:1px 5px; border:1px solid #e57373;
+                             border-radius:4px; background:#ffebee; color:#c62828;">
+                삭제
+              </button>
+            </form>
+
+            {% if a.memo %}
+              <div style="font-size:12px; color:#666; margin-top:3px;">
+                {{ a.memo }}
+              </div>
+            {% endif %}
+          </li>
+        {% else %}
+          <li>등록된 액티비티 없음</li>
+        {% endfor %}
+      </ul>
+
+      <a href="{{ url_for('activity_form', trip_id=trip.trip_id) }}">+ 액티비티 추가</a>
+    </div>
+
+  </div>
+  {% endfor %}
+</div>
+
+{% if destinations|length == 0 %}
+  <p>아직 등록된 Day/도시가 없습니다.</p>
+{% endif %}
+
+<p style="margin-top: 20px;">
+  <a href="{{ url_for('destination_form', trip_id=trip.trip_id) }}">+ Day / 도시 추가</a>
+</p>
+
+<hr>
+
+<!-- ====================== -->
+<!--      지출 내역         -->
+<!-- ====================== -->
+
+<h3>지출 내역</h3>
+<p>
+  <a href="{{ url_for('expense_form', trip_id=trip.trip_id) }}">+ 지출 추가</a>
+</p>
+
+<table border="1" cellpadding="6" style="border-collapse:collapse;">
+  <tr>
+    <th>결제자</th>
+    <th>카테고리</th>
+    <th>원래 금액</th>
+    <th>환산 금액(원)</th>
+    <th>결제일시</th>
+    <th>메모</th>
+    <th>수정/삭제</th>
+  </tr>
+
+  {% for e in expenses %}
+  <tr>
+    <td>{{ e.payer_name }}</td>
+    <td>{{ e.category }}</td>
+    <td>
+      {% if e.amount %}
+        {{ e.amount }} {{ e.currency_code }}
+      {% else %}
+        -
+      {% endif %}
+    </td>
+    <td>{{ e.amount_krw }}</td>
+    <td>{{ e.paid_at }}</td>
+    <td>{{ e.memo }}</td>
+    <td>
+      <!-- 지출 수정 버튼 -->
+      <a href="{{ url_for('expense_edit', expense_id=e.expense_id) }}"
+         style="font-size:11px; padding:2px 6px; border:1px solid #888;
+                border-radius:4px; text-decoration:none; color:#333;">
+        수정
+      </a>
+
+      <!-- 지출 삭제 버튼 -->
+      <form method="POST"
+            action="{{ url_for('expense_delete', expense_id=e.expense_id) }}"
+            style="display:inline-block; margin-left:4px;"
+            onsubmit="return confirm('이 지출 내역을 삭제할까요?');">
+        <button type="submit"
+                style="font-size:11px; padding:2px 6px; border:1px solid #e57373;
+                       border-radius:4px; background:#ffebee; color:#c62828;">
+          삭제
+        </button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if not expenses %}
+  <p>아직 등록된 지출이 없습니다.</p>
+{% endif %}
+
+<hr>
+
+<!-- ====================== -->
+<!--      정산 결과         -->
+<!-- ====================== -->
+
+<h3>정산 결과 (개인별)</h3>
+
+<table border="1" cellpadding="6" style="border-collapse:collapse;">
+  <tr>
+    <th>이름</th>
+    <th>최종 결제액(원)</th>
+    <th>총 부담액(원)</th>
+    <th>정산 결과</th>
+  </tr>
+
+  {% for s in settlement %}
+  <tr>
+    <td>{{ s.name }}</td>
+    <td>{{ s.final_paid }}</td>
+    <td>{{ s.total_share }}</td>
+    <td>
+      {% if s.balance > 0 %}
+        +{{ s.balance }} 원 받을 사람
+      {% elif s.balance < 0 %}
+        -{{ -s.balance }} 원 더 내야 함
+      {% else %}
+        0원 (정산 완료)
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if settlement|length == 0 %}
+  <p>정산 데이터가 없습니다.</p>
+{% endif %}
+
+<hr>
+
+<!-- ====================== -->
+<!--   송금 매칭 / 버튼     -->
+<!-- ====================== -->
+
+<h3>송금 정리</h3>
+
+{% if transactions %}
+<div style="padding:15px; background:#f7f7ff; border:1px solid #ccc; border-radius:8px;">
+  <ul style="list-style:none; padding-left:0;">
+    {% for t in transactions %}
+    <li style="margin-bottom:12px;">
+      <strong>{{ t.from }}</strong> → <strong>{{ t.to }}</strong>
+      <span style="font-weight:bold; color:#2a4bd7;">{{ t.amount }}원</span>
+
+      <form method="POST"
+            action="{{ url_for('settlement_done', trip_id=trip.trip_id) }}"
+            style="display:inline-block; margin-left:10px;">
+        <input type="hidden" name="payer" value="{{ t.from }}">
+        <input type="hidden" name="receiver" value="{{ t.to }}">
+        <input type="hidden" name="amount" value="{{ t.amount }}">
+        <button type="submit"
+                style="padding:3px 10px; background:#4CAF50; color:white;
+                       border:none; border-radius:5px;">
+          보냈습니다
+        </button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% else %}
+<p style="color:gray;">모든 송금이 완료되었습니다 🎉</p>
+{% endif %}
+
+<hr>
+
+{% endblock %}

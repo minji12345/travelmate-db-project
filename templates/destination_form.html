@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Day / 도시 추가 - {{ trip.title }}</h2>
+<p>기간: {{ trip.start_date }} ~ {{ trip.end_date }}</p>
+
+<form method="post">
+  <div>
+    <label>Day 번호</label><br>
+    <input type="number" name="day_no" min="1" required>
+  </div>
+
+  <div>
+    <label>나라</label><br>
+    <input type="text" name="country_name" placeholder="Japan">
+  </div>
+
+  <div>
+    <label>도시</label><br>
+    <input type="text" name="city_name" placeholder="Fukuoka">
+  </div>
+
+  <div>
+    <label>메모</label><br>
+    <input type="text" name="note" size="50" placeholder="예: 시내 관광">
+  </div>
+
+  <p>
+    <button type="submit">저장</button>
+    <a href="{{ url_for('trip_detail', trip_id=trip.trip_id) }}">취소</a>
+  </p>
+</form>
+{% endblock %}

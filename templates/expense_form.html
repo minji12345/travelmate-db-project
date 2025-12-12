@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>지출 추가 - {{ trip.title }}</h2>
+<p>기간: {{ trip.start_date }} ~ {{ trip.end_date }}</p>
+
+<form method="post">
+  <div>
+    <label>결제자</label><br>
+    <select name="payer_id" required>
+      {% for p in participants %}
+      <option value="{{ p.user_id }}">{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+<div>
+  <label>금액</label><br>
+  <input type="number" name="amount" step="0.01" required>
+</div>
+
+<div>
+  <label>통화</label><br>
+  <select name="currency_code" required>
+    <option value="KRW">KRW (₩, 한국)</option>
+    <option value="JPY">JPY (¥, 일본)</option>
+    <option value="USD">USD ($, 미국/괌/사이판)</option>
+    <option value="EUR">EUR (€ , 유럽)</option>
+    <option value="CNY">CNY (¥, 중국)</option>
+    <option value="HKD">HKD ($, 홍콩)</option>
+    <option value="TWD">TWD (NT$, 대만)</option>
+    <option value="THB">THB (฿, 태국)</option>
+    <option value="VND">VND (₫, 베트남)</option>
+    <option value="SGD">SGD ($, 싱가포르)</option>
+    <!-- 필요하면 더 추가 가능 -->
+  </select>
+</div>
+
+
+
+  <div>
+    <label>카테고리</label><br>
+    <input type="text" name="category" placeholder="식비 / 교통 / 관광 등">
+  </div>
+
+  <div>
+    <label>결제 수단</label><br>
+    <select name="payment_method">
+      <option value="">선택 안함</option>
+      <option value="card">카드</option>
+      <option value="cash">현금</option>
+      <option value="transfer">계좌이체</option>
+    </select>
+  </div>
+
+  <div>
+    <label>메모</label><br>
+    <input type="text" name="memo" size="50" placeholder="예: 첫날 저녁 식사">
+  </div>
+
+  <p>
+    <strong>N빵 방식:</strong> 이 여행 참가자 
+    ({{ participants|length }}명)를 기준으로,
+    입력한 금액을 선택한 통화에서 KRW(원)로 환산한 뒤 균등 분배하여
+    정산 테이블(expense_participants)에 자동 저장합니다.
+  </p>
+
+  <p>
+    <button type="submit">저장</button>
+    <a href="{{ url_for('trip_detail', trip_id=trip.trip_id) }}">취소</a>
+  </p>
+</form>
+{% endblock %}

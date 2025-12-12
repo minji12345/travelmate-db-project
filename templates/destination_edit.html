@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Day / 도시 수정</h2>
+
+<p>여행: {{ dest.trip_id }}번 여행</p>
+
+<form method="POST">
+
+  <label>Day 번호</label><br>
+  <input type="number" name="day_no" value="{{ dest.day_no }}" required><br><br>
+
+  <label>나라</label><br>
+  <input type="text" name="country_name" value="{{ dest.country_name }}"><br><br>
+
+  <label>도시</label><br>
+  <input type="text" name="city_name" value="{{ dest.city_name }}"><br><br>
+
+  <label>메모</label><br>
+  <textarea name="note" rows="3" cols="40">{{ dest.note }}</textarea><br><br>
+
+  <button type="submit">저장하기</button>
+  <a href="{{ url_for('trip_detail', trip_id=dest.trip_id) }}">돌아가기</a>
+
+</form>
+
+{% endblock %}

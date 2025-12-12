@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>지출 수정 – {{ trip.title }}</h2>
+<p>기간: {{ trip.start_date }} ~ {{ trip.end_date }}</p>
+
+<hr>
+
+<form method="POST">
+
+  <p>
+    <label>결제자:</label>
+    <select name="payer_id">
+      {% for p in participants %}
+        <option value="{{ p.user_id }}"
+          {% if p.user_id == expense.paid_by_user_id %}selected{% endif %}>
+          {{ p.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </p>
+
+  <p>
+    <label>금액:</label>
+    <input type="number" step="0.01" name="amount"
+           value="{{ expense.amount }}" required>
+  </p>
+
+  <p>
+    <label>통화:</label>
+    <select name="currency_code" required>
+      <option value="KRW" {% if expense.currency_code == 'KRW' %}selected{% endif %}>KRW (원)</option>
+      <option value="JPY" {% if expense.currency_code == 'JPY' %}selected{% endif %}>JPY (엔)</option>
+      <option value="USD" {% if expense.currency_code == 'USD' %}selected{% endif %}>USD (달러)</option>
+      <option value="EUR" {% if expense.currency_code == 'EUR' %}selected{% endif %}>EUR (유로)</option>
+      <option value="CNY" {% if expense.currency_code == 'CNY' %}selected{% endif %}>CNY (위안)</option>
+      <option value="HKD" {% if expense.currency_code == 'HKD' %}selected{% endif %}>HKD (홍콩달러)</option>
+      <option value="TWD" {% if expense.currency_code == 'TWD' %}selected{% endif %}>TWD (대만달러)</option>
+      <option value="THB" {% if expense.currency_code == 'THB' %}selected{% endif %}>THB (바트)</option>
+      <option value="PHP" {% if expense.currency_code == 'PHP' %}selected{% endif %}>PHP (페소)</option>
+      <option value="VND" {% if expense.currency_code == 'VND' %}selected{% endif %}>VND (동)</option>
+    </select>
+  </p>
+
+  <p>
+    <label>카테고리:</label>
+    <input type="text" name="category" value="{{ expense.category or '' }}">
+  </p>
+
+  <p>
+    <label>결제 수단:</label>
+    <input type="text" name="payment_method" value="{{ expense.payment_method or '' }}">
+  </p>
+
+  <p>
+    <label>메모:</label><br>
+    <textarea name="memo" rows="3" cols="40">{{ expense.memo or '' }}</textarea>
+  </p>
+
+  <p>
+    <button type="submit">저장</button>
+    <a href="{{ url_for('trip_detail', trip_id=expense.trip_id) }}">취소</a>
+  </p>
+
+</form>
+
+{% endblock %}

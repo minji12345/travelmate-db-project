@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>액티비티 추가 - {{ trip.title }}</h2>
+<p>기간: {{ trip.start_date }} ~ {{ trip.end_date }}</p>
+
+<form method="post" style="margin-top:20px;">
+
+  <!-- Day / 도시 선택 -->
+  <div style="margin-bottom:15px;">
+    <label>Day / 도시 선택</label><br>
+    <select name="destination_id" required>
+      {% for d in destinations %}
+      <option value="{{ d.destination_id }}">
+        Day {{ d.day_no }} - {{ d.country_name }} {{ d.city_name }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- 액티비티 이름 -->
+  <div style="margin-bottom:15px;">
+    <label>액티비티 이름</label><br>
+    <input type="text" name="name" required placeholder="예: 텐진 쇼핑">
+  </div>
+
+  <!-- 카테고리 -->
+  <div style="margin-bottom:15px;">
+    <label>카테고리</label><br>
+    <input type="text" name="category" placeholder="shopping / tour / cafe 등">
+  </div>
+
+  <!-- 시작 시간 -->
+  <div style="margin-bottom:15px;">
+    <label for="start_time">시작 시간</label><br>
+    <input
+      id="start_time"
+      type="text"
+      name="start_time"
+      placeholder="예: 09:30"
+      pattern="^([01]\d|2[0-3]):[0-5]\d$"
+      title="시간은 00:00 ~ 23:59 형식으로 입력해주세요."
+      style="width:200px;"
+    >
+  </div>
+
+  <!-- 종료 시간 -->
+  <div style="margin-bottom:15px;">
+    <label for="end_time">종료 시간</label><br>
+    <input
+      id="end_time"
+      type="text"
+      name="end_time"
+      placeholder="예: 13:00"
+      pattern="^([01]\d|2[0-3]):[0-5]\d$"
+      title="시간은 00:00 ~ 23:59 형식으로 입력해주세요."
+      style="width:200px;"
+    >
+    <br>
+    <small style="color:#666;">※ HH:MM 형식으로 입력하세요 (24시간 기준)</small>
+  </div>
+
+  <!-- 예상 비용 -->
+  <div style="margin-bottom:15px;">
+    <label>예상 비용</label><br>
+    <input type="number" name="amount" step="0.01" placeholder="예: 5000">
+  </div>
+
+  <!-- 통화 선택 -->
+  <div style="margin-bottom:15px;">
+    <label>통화</label><br>
+    <select name="currency_code">
+      <option value="">입력 안함</option>
+      <option value="KRW">KRW (₩)</option>
+      <option value="JPY">JPY (¥)</option>
+      <option value="USD">USD ($)</option>
+      <option value="EUR">EUR (€)</option>
+      <option value="CNY">CNY (¥)</option>
+      <option value="HKD">HKD ($)</option>
+      <option value="TWD">TWD (NT$)</option>
+      <option value="THB">THB (฿)</option>
+      <option value="VND">VND (₫)</option>
+      <option value="SGD">SGD ($)</option>
+    </select>
+  </div>
+
+  <!-- 메모 -->
+  <div style="margin-bottom:20px;">
+    <label>메모</label><br>
+    <input type="text" name="memo" size="50" placeholder="예: 입장료 포함 / 예약 완료">
+  </div>
+
+  <!-- 버튼 -->
+  <p>
+    <button type="submit">저장</button>
+    <a href="{{ url_for('trip_detail', trip_id=trip.trip_id) }}">취소</a>
+  </p>
+
+</form>
+{% endblock %}

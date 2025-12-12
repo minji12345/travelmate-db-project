@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>액티비티 수정</h2>
+
+<form method="POST">
+
+  <p>
+    <label>Day / 도시 선택</label><br>
+    <select name="destination_id">
+      {% for d in destinations %}
+      <option value="{{ d.destination_id }}"
+              {% if d.destination_id == activity.destination_id %}selected{% endif %}>
+        Day {{ d.day_no }} - {{ d.country_name }} {{ d.city_name }}
+      </option>
+      {% endfor %}
+    </select>
+  </p>
+
+  <p>
+    <label>이름</label><br>
+    <input type="text" name="name" value="{{ activity.name }}" required>
+  </p>
+
+  <p>
+    <label>카테고리</label><br>
+    <input type="text" name="category" value="{{ activity.category or '' }}">
+  </p>
+
+  <p>
+    <label>시작 시간</label><br>
+    <input type="time" name="start_time" value="{{ activity.start_time }}">
+  </p>
+
+  <p>
+    <label>종료 시간</label><br>
+    <input type="time" name="end_time" value="{{ activity.end_time }}">
+  </p>
+
+  <p>
+    <label>금액</label><br>
+    <input type="number" step="0.01" name="amount" 
+           value="{{ activity.cost }}">
+  </p>
+
+  <p>
+    <label>통화</label><br>
+    <select name="currency_code">
+      <option value="">(원화 KRW)</option>
+      <option value="KRW" {% if activity.currency_code == 'KRW' %}selected{% endif %}>KRW (원)</option>
+      <option value="JPY" {% if activity.currency_code == 'JPY' %}selected{% endif %}>JPY (엔)</option>
+      <option value="USD" {% if activity.currency_code == 'USD' %}selected{% endif %}>USD (달러)</option>
+      <option value="EUR" {% if activity.currency_code == 'EUR' %}selected{% endif %}>EUR (유로)</option>
+      <option value="CNY" {% if activity.currency_code == 'CNY' %}selected{% endif %}>CNY (위안)</option>
+      <option value="HKD" {% if activity.currency_code == 'HKD' %}selected{% endif %}>HKD</option>
+      <option value="TWD" {% if activity.currency_code == 'TWD' %}selected{% endif %}>TWD</option>
+      <option value="SGD" {% if activity.currency_code == 'SGD' %}selected{% endif %}>SGD</option>
+      <option value="THB" {% if activity.currency_code == 'THB' %}selected{% endif %}>THB</option>
+      <option value="VND" {% if activity.currency_code == 'VND' %}selected{% endif %}>VND</option>
+    </select>
+  </p>
+
+  <p>
+    <label>메모</label><br>
+    <textarea name="memo" rows="3" cols="40">{{ activity.memo or '' }}</textarea>
+  </p>
+
+  <p>
+    <button type="submit">저장</button>
+    <a href="{{ url_for('trip_detail', trip_id=activity.trip_id) }}">취소</a>
+  </p>
+
+</form>
+
+{% endblock %}

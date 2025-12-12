@@ -1,0 +1,169 @@
+/* 전체 레이아웃 */
+body {
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  background: #f7f8fa;
+  margin: 0;
+  padding: 0;
+}
+
+/* 공통 컨테이너 */
+main {
+  width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+/* 헤더 */
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 20px 40px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+header a {
+  text-decoration: none;
+  color: #333;
+}
+
+nav a {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: #000;
+}
+
+/* 제목 */
+h2, h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+/* 버튼 스타일 */
+a, button {
+  cursor: pointer;
+}
+
+button {
+  background: #4a6df5;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+button:hover {
+  background: #3a58d8;
+}
+
+/* 링크 버튼 스타일 */
+a {
+  color: #4a6df5;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 테이블 스타일 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+th {
+  background: #f0f2f5;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* 폼 스타일 */
+form div {
+  margin-bottom: 15px;
+}
+
+input, select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 250px;
+}
+
+input[type="number"],
+input[type="time"],
+input[type="text"],
+select {
+  width: 260px;
+}
+
+p {
+  color: #444;
+  line-height: 1.5;
+}
+
+/* 타임라인 스타일 */
+.timeline {
+  margin-top: 20px;
+  border-left: 3px solid #4a6df5;
+  padding-left: 20px;
+}
+
+.timeline-item {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: #4a6df5;
+  border-radius: 50%;
+  position: absolute;
+  left: -15px;
+  top: 4px;
+}
+
+.timeline-day {
+  font-weight: 700;
+  font-size: 18px;
+  color: #4a6df5;
+  margin-bottom: 8px;
+}
+
+.timeline-content {
+  background: #ffffff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.timeline-content h4 {
+  margin: 0 0 6px;
+}
+
+.timeline-content h5 {
+  margin: 10px 0 5px;
+  font-size: 15px;
+}

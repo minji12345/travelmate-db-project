@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>새 여행 만들기</h2>
+
+<form method="post">
+  <div>
+    <label>제목</label><br>
+    <input type="text" name="title" required>
+  </div>
+
+  <div>
+    <label>출발일</label><br>
+    <input type="date" name="start_date">
+  </div>
+
+  <div>
+    <label>종료일</label><br>
+    <input type="date" name="end_date">
+  </div>
+
+  <p>
+    <button type="submit">저장</button>
+    <a href="{{ url_for('trip_list') }}">취소</a>
+  </p>
+</form>
+{% endblock %}
